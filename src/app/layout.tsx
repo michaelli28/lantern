@@ -1,16 +1,36 @@
 import type { Metadata } from "next";
-import { Inter, Geist_Mono } from "next/font/google";
+import {
+  EB_Garamond,
+  Young_Serif,
+  Special_Elite,
+  Geist_Mono,
+} from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+const body = EB_Garamond({
+  variable: "--ff-body",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const editorial = Young_Serif({
+  variable: "--ff-editorial",
+  subsets: ["latin"],
+  weight: ["400"],
+  display: "swap",
+});
+
+const typewriter = Special_Elite({
+  variable: "--ff-typewriter",
+  subsets: ["latin"],
+  weight: ["400"],
+  display: "swap",
+});
+
+const mono = Geist_Mono({
+  variable: "--ff-mono",
   subsets: ["latin"],
   display: "swap",
 });
@@ -27,7 +47,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${body.variable} ${editorial.variable} ${typewriter.variable} ${mono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[var(--bg-page)] text-[var(--text-primary)]">
         {children}

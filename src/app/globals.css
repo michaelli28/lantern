@@ -1,24 +1,51 @@
 @import "tailwindcss";
 
 /* ───────────────────────────────────────────────────────────────
-   LANTERN — Notion-inspired design tokens
-   Source of truth: DESIGN.md (Notion-derived system)
-   Warm neutrals, whisper borders, multi-layer shadows, Notion Blue accent.
+   LANTERN — archival editorial design tokens
+   Parchment & ink palette, warm ember accents, Young Serif display,
+   EB Garamond body, Special Elite typewriter labels.
 ─────────────────────────────────────────────────────────────── */
 
 :root {
-  /* Surfaces */
-  --bg-page: #ffffff;
-  --bg-warm: #f6f5f4;
+  /* Fonts — resolved to real faces via next/font variables */
+  --font-body: var(--ff-body), "EB Garamond", Georgia, "Times New Roman", serif;
+  --font-editorial:
+    var(--ff-editorial), "Young Serif", Georgia, "Times New Roman", serif;
+  --font-typewriter:
+    var(--ff-typewriter), "Special Elite", "Courier New", ui-monospace,
+    monospace;
+  --font-mono: var(--ff-mono), ui-monospace, "Menlo", monospace;
+
+  /* Archival palette (OKLCH, perceptually uniform) */
+  --parchment: oklch(0.972 0.015 82);
+  --parchment-warm: oklch(0.955 0.021 80);
+  --parchment-deep: oklch(0.922 0.028 76);
+  --ink: oklch(0.225 0.024 55);
+  --ink-soft: oklch(0.36 0.028 55);
+  --ink-ghost: oklch(0.56 0.024 55);
+  --ember: oklch(0.76 0.165 58);
+  --ember-core: oklch(0.62 0.21 40);
+  --ember-bright: oklch(0.94 0.11 85);
+  --rule: oklch(0.225 0.024 55 / 0.18);
+  --rule-soft: oklch(0.225 0.024 55 / 0.08);
+  --input-bg: oklch(0.99 0.008 82);
+  --error-bg: oklch(0.96 0.04 40);
+  --error-border: oklch(0.62 0.21 40 / 0.3);
+  --nav-bg: oklch(0.972 0.015 82 / 0.88);
+
+  /* Surfaces — now parchment-tinted */
+  --bg-page: var(--parchment);
+  --bg-warm: var(--parchment-warm);
   --bg-card: #ffffff;
 
   /* Text */
-  --text-primary: rgba(0, 0, 0, 0.95);
-  --text-secondary: #615d59;
-  --text-muted: #a39e98;
-  --text-inverse: #ffffff;
+  --text-primary: var(--ink);
+  --text-secondary: var(--ink-soft);
+  --text-muted: var(--ink-ghost);
+  --text-inverse: var(--parchment);
 
-  /* Accent */
+  /* Accent — keep Notion blue for the existing action buttons;
+     the hero introduces ember as the headline accent. */
   --accent: #0075de;
   --accent-active: #005bab;
   --accent-focus: #097fe8;
@@ -31,17 +58,17 @@
   --warn: #dd5b00;
 
   /* Borders & shadows */
-  --border-whisper: 1px solid rgba(0, 0, 0, 0.1);
-  --border-input: 1px solid #dddddd;
+  --border-whisper: 1px solid var(--rule);
+  --border-input: 1px solid var(--rule);
   --shadow-card:
-    rgba(0, 0, 0, 0.04) 0px 4px 18px,
-    rgba(0, 0, 0, 0.027) 0px 2.025px 7.84688px,
-    rgba(0, 0, 0, 0.02) 0px 0.8px 2.925px,
-    rgba(0, 0, 0, 0.01) 0px 0.175px 1.04062px;
+    rgba(40, 24, 8, 0.05) 0 4px 18px, rgba(40, 24, 8, 0.035) 0 2px 8px,
+    rgba(40, 24, 8, 0.025) 0 0.8px 3px, rgba(40, 24, 8, 0.012) 0 0.2px 1px;
   --shadow-deep:
-    rgba(0, 0, 0, 0.01) 0px 1px 3px, rgba(0, 0, 0, 0.02) 0px 3px 7px,
-    rgba(0, 0, 0, 0.02) 0px 7px 15px, rgba(0, 0, 0, 0.04) 0px 14px 28px,
-    rgba(0, 0, 0, 0.05) 0px 23px 52px;
+    rgba(40, 24, 8, 0.012) 0 1px 3px, rgba(40, 24, 8, 0.022) 0 3px 7px,
+    rgba(40, 24, 8, 0.028) 0 7px 15px, rgba(40, 24, 8, 0.045) 0 14px 28px,
+    rgba(40, 24, 8, 0.055) 0 23px 52px;
+  --shadow-ember:
+    0 0 32px oklch(0.76 0.165 58 / 0.35), 0 0 80px oklch(0.76 0.165 58 / 0.18);
 
   /* Radii */
   --radius-btn: 4px;
@@ -53,6 +80,13 @@
 @theme inline {
   --color-bg-page: var(--bg-page);
   --color-bg-warm: var(--bg-warm);
+  --color-parchment: var(--parchment);
+  --color-parchment-warm: var(--parchment-warm);
+  --color-parchment-deep: var(--parchment-deep);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ember: var(--ember);
+  --color-ember-core: var(--ember-core);
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-muted: var(--text-muted);
@@ -63,8 +97,10 @@
   --color-ok: var(--ok);
   --color-done: var(--done);
   --color-warn: var(--warn);
-  --font-sans: var(--font-inter);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--ff-body);
+  --font-serif: var(--ff-editorial);
+  --font-typewriter: var(--ff-typewriter);
+  --font-mono: var(--ff-mono);
 }
 
 html,
@@ -74,72 +110,110 @@ body {
 }
 
 body {
-  font-family:
-    var(--font-inter),
-    Inter,
-    -apple-system,
-    system-ui,
-    "Segoe UI",
-    Helvetica,
-    Arial,
-    sans-serif;
-  font-feature-settings: "lnum", "locl";
+  font-family: var(--font-body);
+  font-feature-settings: "lnum", "locl", "kern", "liga";
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-/* ───── Display typography (Notion compression at scale) ───── */
+/* Selection — warm amber wash over sepia ink */
+::selection {
+  background: oklch(0.76 0.165 58 / 0.3);
+  color: var(--ink);
+}
+
+/* ───────── Display typography ─────────
+   Young Serif display pairs with EB Garamond body.
+   Fluid sizing on the hero; fixed scales for the rest. */
 .display-hero {
-  font-size: 64px;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -2.125px;
+  font-family: var(--font-editorial);
+  font-weight: 400;
+  font-size: clamp(48px, 7.6vw, 108px);
+  line-height: 0.94;
+  letter-spacing: -0.02em;
+  color: var(--ink);
 }
 .display-secondary {
-  font-size: 48px;
-  font-weight: 700;
+  font-family: var(--font-editorial);
+  font-weight: 400;
+  font-size: clamp(36px, 4.4vw, 56px);
   line-height: 1;
-  letter-spacing: -1.5px;
+  letter-spacing: -0.012em;
 }
 .heading-md {
+  font-family: var(--font-editorial);
   font-size: 26px;
-  font-weight: 700;
-  line-height: 1.23;
-  letter-spacing: -0.625px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.008em;
 }
 .heading-card {
+  font-family: var(--font-editorial);
   font-size: 22px;
-  font-weight: 700;
-  line-height: 1.27;
-  letter-spacing: -0.25px;
+  font-weight: 400;
+  line-height: 1.22;
+  letter-spacing: -0.006em;
 }
 .body-lg {
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 1.4;
-  letter-spacing: -0.125px;
+  font-family: var(--font-body);
+  font-size: clamp(17px, 1.3vw, 21px);
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: 0.002em;
+  color: var(--ink-soft);
+}
+.body-italic {
+  font-family: var(--font-body);
+  font-style: italic;
+  color: var(--ink-soft);
 }
 .caption {
   font-size: 14px;
-  font-weight: 500;
-  line-height: 1.43;
+  font-weight: 400;
+  line-height: 1.5;
   color: var(--text-secondary);
 }
 .caption-muted {
   font-size: 14px;
   font-weight: 400;
-  line-height: 1.43;
+  line-height: 1.5;
   color: var(--text-muted);
 }
 .micro {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.33;
-  letter-spacing: 0.125px;
+  letter-spacing: 0.04em;
+}
+.eyebrow {
+  font-family: var(--font-typewriter);
+  font-size: 12px;
+  line-height: 1.2;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.eyebrow-lg {
+  font-family: var(--font-typewriter);
+  font-size: 14px;
+  line-height: 1.2;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.dateline {
+  font-family: var(--font-editorial);
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum", "lnum";
 }
 
-/* ───── Motion: whisper tier ─────
-   CSS-only fades, gated by reduced-motion. No scroll, no parallax. */
+/* ───────── Legacy motion tier (existing components) ───────── */
 @keyframes lantern-fade-in {
   from {
     opacity: 0;
@@ -169,7 +243,6 @@ body {
     opacity: 0;
   }
 }
-
 .whisper-in {
   animation: lantern-fade-in 400ms ease-out both;
 }
@@ -180,18 +253,333 @@ body {
   animation: lantern-blink 1s steps(1, end) infinite;
 }
 
+/* ───────── Hero animation tier ───────── */
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes hero-word-rise {
+  from {
+    opacity: 0;
+    transform: translateY(100%) rotate(1.2deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(0);
+  }
+}
+@keyframes hero-ink-draw {
+  from {
+    transform: scaleX(0);
+    opacity: 0.2;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+@keyframes hero-stamp-in {
+  from {
+    opacity: 0;
+    transform: rotate(-28deg) scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(-12deg) scale(1);
+  }
+}
+@keyframes hero-corner-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+}
+@keyframes hero-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.reveal {
+  animation: hero-rise 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.reveal-ink {
+  transform-origin: left center;
+  animation: hero-ink-draw 1200ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ───────── Flame + lantern ambient ───────── */
+@keyframes flame-flicker {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1, 1);
+  }
+  12% {
+    transform: translate(-0.8px, 0.3px) scale(0.985, 1.04);
+  }
+  25% {
+    transform: translate(0.9px, -0.2px) scale(1.02, 0.97);
+  }
+  38% {
+    transform: translate(-0.4px, 0.2px) scale(0.995, 1.02);
+  }
+  52% {
+    transform: translate(0.6px, -0.3px) scale(1.012, 0.98);
+  }
+  66% {
+    transform: translate(-0.7px, 0.1px) scale(0.988, 1.035);
+  }
+  79% {
+    transform: translate(0.5px, 0.2px) scale(1.008, 0.99);
+  }
+  91% {
+    transform: translate(-0.3px, -0.1px) scale(0.998, 1.01);
+  }
+}
+@keyframes flame-core {
+  0%,
+  100% {
+    opacity: 0.95;
+    transform: scaleY(1);
+  }
+  40% {
+    opacity: 1;
+    transform: scaleY(1.08);
+  }
+  70% {
+    opacity: 0.82;
+    transform: scaleY(0.94);
+  }
+}
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+@keyframes ember-rise {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.4);
+  }
+  8% {
+    opacity: 1;
+    transform: translate(var(--ember-x-1, 2px), -24px) scale(0.9);
+  }
+  70% {
+    opacity: 0.6;
+    transform: translate(var(--ember-x-2, -6px), -160px) scale(0.7);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--ember-x-3, 10px), -240px) scale(0.2);
+  }
+}
+@keyframes dust-drift {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  15% {
+    opacity: 0.8;
+  }
+  85% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dust-dx, 16px), var(--dust-dy, -80px));
+  }
+}
+@keyframes caret-blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.flame-group {
+  transform-origin: 50% 92%;
+  transform-box: fill-box;
+  animation: flame-flicker 2.3s ease-in-out infinite;
+}
+.flame-core {
+  transform-origin: 50% 92%;
+  transform-box: fill-box;
+  animation: flame-core 1.7s ease-in-out infinite;
+}
+.glow {
+  animation: glow-pulse 3.2s ease-in-out infinite;
+}
+
+/* ───────── Hero surface ───────── */
+.hero-surface {
+  background:
+    radial-gradient(
+      ellipse 80% 60% at 72% 42%,
+      oklch(0.76 0.165 58 / 0.14) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 60% 80% at 18% 76%,
+      oklch(0.62 0.21 40 / 0.06) 0%,
+      transparent 60%
+    ),
+    linear-gradient(
+      to bottom,
+      var(--parchment) 0%,
+      var(--parchment-warm) 60%,
+      var(--parchment-deep) 100%
+    );
+}
+
+/* Subtle paper grain via SVG-in-data-URI — no extra assets */
+.paper-grain {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.11  0 0 0 0 0.06  0 0 0 0.18 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 240px 240px;
+  mix-blend-mode: multiply;
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.ink-rule {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    var(--rule) 18%,
+    var(--rule) 82%,
+    transparent 100%
+  );
+}
+.ink-rule-dotted {
+  height: 1px;
+  background-image: radial-gradient(
+    circle,
+    var(--rule) 0.6px,
+    transparent 0.6px
+  );
+  background-size: 6px 1px;
+  background-repeat: repeat-x;
+  background-position: center;
+}
+
+/* Word reveal wrapper — for headline mask animation */
+.hero-word {
+  display: inline-block;
+  overflow: hidden;
+  padding: 0 0.03em 0.08em;
+  vertical-align: top;
+  line-height: inherit;
+}
+.hero-word-inner {
+  display: inline-block;
+  transform: translateY(100%);
+  animation: hero-word-rise 1000ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Corner crop marks */
+.hero-corner {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border-color: var(--ink);
+  opacity: 0;
+  animation: hero-corner-in 700ms ease-out 120ms both;
+}
+.hero-corner-tl {
+  top: 22px;
+  left: 22px;
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+}
+.hero-corner-tr {
+  top: 22px;
+  right: 22px;
+  border-top: 1px solid var(--ink);
+  border-right: 1px solid var(--ink);
+}
+.hero-corner-bl {
+  bottom: 22px;
+  left: 22px;
+  border-bottom: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+}
+.hero-corner-br {
+  bottom: 22px;
+  right: 22px;
+  border-bottom: 1px solid var(--ink);
+  border-right: 1px solid var(--ink);
+}
+
+/* Stamp */
+.stamp {
+  animation: hero-stamp-in 1000ms cubic-bezier(0.22, 1, 0.36, 1) 1400ms both;
+  transform-origin: center;
+}
+.stamp-ring {
+  animation: hero-spin 48s linear infinite;
+  transform-origin: 50% 50%;
+  transform-box: fill-box;
+}
+
+/* Scroll hint caret */
+.caret-blink {
+  animation: caret-blink 1.2s steps(1, end) infinite;
+}
+
+/* Reduced motion — disable ornament animations but keep structure */
 @media (prefers-reduced-motion: reduce) {
   .whisper-in,
   .whisper-pulse,
-  .whisper-blink {
+  .whisper-blink,
+  .reveal,
+  .reveal-ink,
+  .hero-word-inner,
+  .flame-group,
+  .flame-core,
+  .glow,
+  .stamp,
+  .stamp-ring,
+  .hero-corner,
+  .caret-blink,
+  .ember,
+  .dust {
     animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  .hero-word-inner {
+    transform: translateY(0) !important;
   }
   * {
     transition-duration: 0.01ms !important;
   }
 }
 
-/* ───── Primitives reused across components ───── */
+/* ───────── Primitives reused across components ───────── */
 .whisper-border {
   border: var(--border-whisper);
 }
@@ -201,9 +589,12 @@ body {
 .deep-shadow {
   box-shadow: var(--shadow-deep);
 }
+.ember-glow {
+  box-shadow: var(--shadow-ember);
+}
 
-/* Focus ring shared across interactive elements */
 :focus-visible {
-  outline: 2px solid var(--accent-focus);
+  outline: 2px solid var(--ember);
   outline-offset: 2px;
+  border-radius: 2px;
 }

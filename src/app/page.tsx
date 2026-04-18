@@ -2,8 +2,9 @@
 
 import { useEffect, useReducer, useRef, useState } from "react";
 import { AgentTrace } from "@/components/AgentTrace";
+import { Hero } from "@/components/Hero";
 import { LetterRender } from "@/components/LetterRender";
-import { Badge, GhostButton, PrimaryButton } from "@/components/UI";
+import { Badge } from "@/components/UI";
 import { getFixture } from "@/lib/fixtures";
 import { playFixture, runStream } from "@/lib/sse";
 import type {
@@ -187,21 +188,44 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* ── Nav ── */}
-      <nav className="w-full border-b border-[rgba(0,0,0,0.08)] bg-white sticky top-0 z-10">
-        <div className="max-w-[1200px] mx-auto px-6 py-3 flex items-center justify-between">
+      <nav className="w-full border-b border-[var(--rule)] bg-[var(--nav-bg)] backdrop-blur-md sticky top-0 z-10">
+        <div className="max-w-[1240px] mx-auto px-6 md:px-14 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <LanternMark />
-            <span className="font-semibold text-[15px] tracking-tight">
+            <span
+              className="text-[17px] leading-none"
+              style={{
+                fontFamily: "var(--font-editorial)",
+                letterSpacing: "0.04em",
+                color: "var(--ink)",
+              }}
+            >
               Lantern
             </span>
+            <span
+              className="inline-block h-3 w-px bg-[var(--rule)] mx-1"
+              aria-hidden
+            />
+            <span
+              className="text-[11px] tracking-[0.22em] uppercase text-[var(--ink-ghost)]"
+              style={{ fontFamily: "var(--font-typewriter)" }}
+            >
+              An archive of vanishing voices
+            </span>
           </div>
-          <div className="flex items-center gap-3">
-            <Badge>Claude Hackathon 2026</Badge>
+          <div className="flex items-center gap-5">
+            <span
+              className="hidden md:inline text-[11px] tracking-[0.22em] uppercase text-[var(--ink-ghost)]"
+              style={{ fontFamily: "var(--font-typewriter)" }}
+            >
+              Claude Hackathon · MMXXVI
+            </span>
             <a
               href="https://github.com/justanothernoob4648/claudehacks-brotoato"
               target="_blank"
               rel="noreferrer noopener"
-              className="caption hover:text-[var(--accent)] transition-colors"
+              className="text-[13px] text-[var(--ink-soft)] hover:text-[var(--ember-core)] underline underline-offset-[5px] decoration-[var(--rule)] hover:decoration-[var(--ember)] transition-colors"
+              style={{ fontFamily: "var(--font-body)" }}
             >
               GitHub
             </a>
@@ -209,71 +233,24 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* ── Hero + input ── */}
-      <section className="w-full bg-white">
-        <div className="max-w-[1200px] mx-auto px-6 pt-20 pb-14 flex flex-col gap-8">
-          <div className="flex flex-col gap-4 max-w-3xl">
-            <Badge tone="blue">
-              ~100,000 WW2 veterans alive · ~300 die every day
-            </Badge>
-            <h1 className="display-hero text-[var(--text-primary)]">
-              Before the last voice goes quiet.
-            </h1>
-            <p className="body-lg text-[var(--text-secondary)] max-w-xl">
-              Paste a YouTube URL of a veteran's testimony. Four Claude agents
-              turn it into an illustrated letter to a descendant they will never
-              meet.
-            </p>
-          </div>
-
-          <form
-            className="flex flex-col md:flex-row gap-3 max-w-3xl"
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (url.trim()) void run({ youtubeUrl: url.trim() });
-            }}
-          >
-            <input
-              type="url"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://www.youtube.com/watch?v=…"
-              className="flex-1 px-3 py-[10px] rounded-[var(--radius-btn)] border border-[#dddddd] bg-white text-[15px] focus:border-[var(--accent-focus)] focus:outline-none transition-colors"
-            />
-            <PrimaryButton type="submit" disabled={busy || !url.trim()}>
-              {busy ? "Working…" : "Begin"}
-            </PrimaryButton>
-          </form>
-
-          <div className="flex flex-wrap items-center gap-2 max-w-3xl">
-            <span className="caption-muted mr-1">Try:</span>
-            {PRESETS.map((p) => (
-              <GhostButton
-                key={p.fixtureId}
-                onClick={() =>
-                  !p.disabled &&
-                  void run({
-                    fixtureId: p.fixtureId,
-                    title: p.label,
-                    speaker: p.label.split("·")[0].trim(),
-                  })
-                }
-              >
-                <span className={p.disabled ? "text-[var(--text-muted)]" : ""}>
-                  {p.label}
-                  {p.disabled ? " (soon)" : ""}
-                </span>
-              </GhostButton>
-            ))}
-          </div>
-
-          {state.error ? (
-            <div className="whisper-in max-w-3xl rounded-[var(--radius-card)] border border-[rgba(221,91,0,0.25)] bg-[rgba(221,91,0,0.06)] px-4 py-3 caption text-[var(--warn)]">
-              {state.error}
-            </div>
-          ) : null}
-        </div>
-      </section>
+      <Hero
+        url={url}
+        onUrlChange={setUrl}
+        onSubmit={() => {
+          if (url.trim()) void run({ youtubeUrl: url.trim() });
+        }}
+        busy={busy}
+        presets={PRESETS}
+        onPresetClick={(p) => {
+          if (p.disabled) return;
+          void run({
+            fixtureId: p.fixtureId,
+            title: p.label,
+            speaker: p.label.split("·")[0].trim(),
+          });
+        }}
+        error={state.error}
+      />
 
       {/* ── Agent trace (warm section) ── */}
       <section className="w-full bg-[var(--bg-warm)] border-y border-[rgba(0,0,0,0.06)]">
@@ -336,10 +313,78 @@ function LanternMark() {
   return (
     <span
       aria-hidden
-      className="inline-flex items-center justify-center w-7 h-7 rounded-[8px] bg-[var(--accent)] text-white text-[13px] font-bold"
-      style={{ letterSpacing: "-0.02em" }}
+      className="relative inline-flex items-center justify-center"
+      style={{ width: 26, height: 30 }}
     >
-      L
+      <span
+        className="absolute inset-0 rounded-full blur-md"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 60%, oklch(0.76 0.17 58 / 0.5) 0%, transparent 70%)",
+        }}
+      />
+      <svg
+        viewBox="0 0 26 30"
+        className="relative"
+        style={{ color: "var(--ink)" }}
+      >
+        {/* Ring */}
+        <circle
+          cx="13"
+          cy="3"
+          r="2"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.9"
+        />
+        {/* Cap */}
+        <path
+          d="M 7 8 L 19 8 L 18 10 L 8 10 Z"
+          fill="currentColor"
+          opacity="0.85"
+        />
+        {/* Chamber */}
+        <path
+          d="M 7 10 L 19 10 L 19 22 L 7 22 Z"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.9"
+        />
+        {/* Flame */}
+        <ellipse cx="13" cy="17" rx="1.6" ry="3.2" fill="oklch(0.76 0.17 58)" />
+        <ellipse
+          cx="13"
+          cy="16.5"
+          rx="0.7"
+          ry="1.8"
+          fill="oklch(0.97 0.1 85)"
+        />
+        {/* Base */}
+        <rect
+          x="6"
+          y="22"
+          width="14"
+          height="2"
+          fill="currentColor"
+          opacity="0.85"
+        />
+        <rect
+          x="8"
+          y="24"
+          width="2"
+          height="2"
+          fill="currentColor"
+          opacity="0.7"
+        />
+        <rect
+          x="16"
+          y="24"
+          width="2"
+          height="2"
+          fill="currentColor"
+          opacity="0.7"
+        />
+      </svg>
     </span>
   );
 }
