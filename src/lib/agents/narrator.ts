@@ -8,7 +8,7 @@ import type {
   StreamEvent,
 } from "@/lib/types";
 import { NARRATOR_SYSTEM, RENDER_LETTER_TOOL } from "@/lib/prompts";
-import { isTrustedImage, pickFallbackImage } from "@/lib/imageValidator";
+import { pickFallbackImage } from "@/lib/imageValidator";
 import { consumeStream } from "./streamHelper";
 
 export async function runNarrator(
@@ -91,20 +91,20 @@ Now write the letter.`;
   return letter;
 }
 
-// Strip hallucinated image URLs (anything not on our trusted host list) and
-// guarantee the letter has at least one visual anchor by injecting a thematic
-// fallback on the first section when nothing survived sanitization.
+// Claude's imageUrls are hallucinations and always 404. Replace whatever the
+// model produced with a verified-real image from the curated library, picked
+// by keyword-scoring the transcript + fragments against each fallback's theme.
+// Always applied to section[0] so the letter has exactly one archival anchor.
 function sanitizeAndEnsureImage(
   sections: LetterSection[],
   themeContext: string,
 ): LetterSection[] {
-  const cleaned = sections.map((s) => {
-    if (s.imageUrl && !isTrustedImage(s.imageUrl)) {
-      return { ...s, imageUrl: undefined, imageCredit: undefined };
-    }
-    return s;
-  });
-  if (!cleaned.some((s) => s.imageUrl) && cleaned.length > 0) {
+  const cleaned = sections.map((s) => ({
+    ...s,
+    imageUrl: undefined as string | undefined,
+    imageCredit: undefined as string | undefined,
+  }));
+  if (cleaned.length > 0) {
     const fb = pickFallbackImage(themeContext);
     cleaned[0] = {
       ...cleaned[0],

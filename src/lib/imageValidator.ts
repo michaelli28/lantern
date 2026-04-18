@@ -1,50 +1,23 @@
-// Claude's web_search tool returns web-page URLs, not real image paths — so when
-// FactWeaver fills in `imageUrl` it's guessing. Most guesses 404. We gate on
-// trusted hosts (Wikimedia Commons) where hotlinking is reliably supported, and
-// strip everything else.
+// Claude's web_search tool returns page URLs, not image paths, so any
+// `imageUrl` it produces is a guess — and in practice those guesses 404 even
+// when the hostname is correct (Wikimedia paths use hashed prefixes Claude
+// can't predict). Rather than runtime-validate (Wikimedia 429s repeat HEAD
+// requests from the same IP), we ignore Claude's imageUrl entirely and always
+// assign a verified-real image from a curated library, picked by theme.
 
-const TRUSTED_HOSTS = new Set([
-  "upload.wikimedia.org",
-  "commons.wikimedia.org",
-]);
-
-export function isTrustedImage(url: string | undefined): boolean {
-  if (!url) return false;
-  try {
-    const u = new URL(url);
-    return TRUSTED_HOSTS.has(u.hostname);
-  } catch {
-    return false;
-  }
-}
-
-// Thematically-keyed fallbacks. Each URL is a real Wikimedia Commons thumbnail
-// we know loads in the browser. Chosen by keyword-scoring the transcript +
-// fragments against the `themes` list.
-const FALLBACKS: Array<{
+// Every URL below was resolved via the Wikipedia REST API
+// (https://en.wikipedia.org/api/rest_v1/page/summary/<page>) so the path
+// prefixes are real. These images render in browsers without 429 because a
+// single render per page is well under the per-IP threshold.
+const CURATED: Array<{
   url: string;
   credit: string;
   themes: string[];
 }> = [
   {
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Paratroopers_just_before_they_took_off_for_the_initial_assault_of_D-Day.jpg/800px-Paratroopers_just_before_they_took_off_for_the_initial_assault_of_D-Day.jpg",
-    credit: "U.S. Army, public domain — NARA via Wikimedia Commons",
-    themes: [
-      "paratrooper",
-      "airborne",
-      "jumped",
-      "jump",
-      "101st",
-      "82nd",
-      "normandy",
-      "d-day",
-      "european",
-    ],
-  },
-  {
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Into_the_Jaws_of_Death_23-0455M_edit.jpg/1024px-Into_the_Jaws_of_Death_23-0455M_edit.jpg",
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Into_the_Jaws_of_Death_23-0455M_edit.jpg/1024px-Into_the_Jaws_of_Death_23-0455M_edit.jpg",
     credit:
-      "U.S. Coast Guard — 'Into the Jaws of Death' (Omaha Beach), public domain via Wikimedia Commons",
+      "Robert F. Sargent, U.S. Coast Guard — 'Into the Jaws of Death', Omaha Beach, June 6 1944 (public domain, NARA)",
     themes: [
       "landing",
       "landings",
@@ -59,12 +32,42 @@ const FALLBACKS: Array<{
       "boat",
       "craft",
       "ramp",
+      "d-day",
+      "normandy",
+      "european",
     ],
   },
   {
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/WWII_Iwo_Jima_flag_raising.jpg/1024px-WWII_Iwo_Jima_flag_raising.jpg",
-    credit: "Joe Rosenthal / AP — 'Raising the Flag on Iwo Jima', public domain",
-    themes: ["iwo jima", "pacific", "okinawa", "guadalcanal", "japan", "japanese"],
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Raising_the_Flag_on_Iwo_Jima%2C_larger_-_edit1.jpg/1024px-Raising_the_Flag_on_Iwo_Jima%2C_larger_-_edit1.jpg",
+    credit:
+      "Joe Rosenthal, Associated Press — 'Raising the Flag on Iwo Jima', February 23 1945 (public domain)",
+    themes: [
+      "iwo jima",
+      "pacific",
+      "okinawa",
+      "guadalcanal",
+      "japan",
+      "japanese",
+      "marine corps",
+    ],
+  },
+  {
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/NormandySupply_edit.jpg/1024px-NormandySupply_edit.jpg",
+    credit:
+      "U.S. Coast Guard — Operation Overlord supply landings, Normandy June 1944 (public domain, NARA)",
+    themes: [
+      "overlord",
+      "normandy",
+      "supply",
+      "paratrooper",
+      "airborne",
+      "101st",
+      "82nd",
+      "jump",
+      "jumped",
+      "europe",
+      "european",
+    ],
   },
 ];
 
@@ -73,9 +76,9 @@ export function pickFallbackImage(context: string): {
   credit: string;
 } {
   const lower = context.toLowerCase();
-  let best = FALLBACKS[0];
-  let bestScore = 0;
-  for (const f of FALLBACKS) {
+  let best = CURATED[0];
+  let bestScore = -1;
+  for (const f of CURATED) {
     const score = f.themes.reduce(
       (acc, t) => acc + (lower.includes(t) ? 1 : 0),
       0,
