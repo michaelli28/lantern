@@ -14,9 +14,15 @@ export async function POST(req: NextRequest) {
       let closed = false;
       const emit = (e: StreamEvent) => {
         if (closed) return;
-        controller.enqueue(
-          encoder.encode(`event: message\ndata: ${JSON.stringify(e)}\n\n`),
-        );
+        try {
+          controller.enqueue(
+            encoder.encode(`event: message\ndata: ${JSON.stringify(e)}\n\n`),
+          );
+        } catch {
+          // Client disconnected while agents were mid-flight; swallow and
+          // let the remaining agents finish silently.
+          closed = true;
+        }
       };
       try {
         await orchestrate(body, emit);
