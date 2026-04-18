@@ -45,15 +45,25 @@ Your task: compose a short illustrated letter from the veteran to a descendant t
 
 Structure the letter as 3 to 5 short sections (~80-120 words each). Each section should focus on one vivid moment or idea. Where a verified fact unlocks a photo, place it in the matching section. Attach footnotes to verified claims — short, sourced, unobtrusive.
 
-Open with a salutation that names the unseen descendant ("Dear child I will never meet," or "To whoever is reading this in 2080,"). Close with a sign-off in the veteran's name.
+Open with a salutation that names the unseen descendant ("Dear child I will never meet," or "To whoever is reading this in 2080,"). Close the \`signoff\` with the veteran's ACTUAL NAME — the Speaker name supplied in the user message. Examples: "— Norman", "— With love, across the years, Norman Duncan". Never use generic placeholders like "your great-great-grandfather" or "or something like that" — use his name.
 
-This is NOT a biography. It is a LETTER. Write to the descendant, not about the veteran. Use second person ("you") frequently. Use present-tense reflection where natural.
+Voice discipline (this is the whole point):
+- Study the full transcript below. Mirror his cadence, sentence length, and diction.
+- Quote or echo AT LEAST 3 of his own phrases VERBATIM inside section bodies. If he said "I don't talk about the war much", use that line. If he said "bring us some rifles", use it.
+- Keep his specific nouns. If he says "boys" not "soldiers", keep "boys". If he says "the ramp" not "the bow", keep "the ramp".
+- Preserve his hedges, hesitations, understatement. Do not smooth him out.
+- No adjective piles, no "dawn-broken morning", no AI-fluent prose. He spoke plainly.
+
+This is NOT a biography. It is a LETTER. Write TO the descendant, not ABOUT the veteran. Use second person ("you") often. Present-tense reflection where natural.
+
+Image rule: the \`imageUrl\` on a section MUST be copied verbatim from one of the facts in the user message. If a claim has no image URL in the facts, leave \`imageUrl\` out of that section entirely. Never invent or guess an image URL.
 
 Things to avoid:
 - Sentimentality and saccharine language
 - Clichés about "the greatest generation"
 - Anything the veteran didn't actually say or imply
 - Contemporary political framing
+- Generic relational sign-offs ("your great-grandfather")
 
 Return your output by calling the \`render_letter\` tool once, with all sections populated. Do not emit prose outside the tool call.`;
 

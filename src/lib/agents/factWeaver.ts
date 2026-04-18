@@ -1,6 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type { Fact, Fragment, StreamEvent } from "@/lib/types";
 import { FACT_WEAVER_SYSTEM, SAVE_FACT_TOOL } from "@/lib/prompts";
+import { isTrustedImage } from "@/lib/imageValidator";
 import { consumeStream } from "./streamHelper";
 
 export async function runFactWeaver(
@@ -42,13 +43,14 @@ export async function runFactWeaver(
         imageCredit?: string;
       };
       if (!i.claim || !i.verdict) return;
+      const trusted = isTrustedImage(i.imageUrl);
       const fact: Fact = {
         id: `fact${nextId++}`,
         claim: i.claim,
         verdict: i.verdict as Fact["verdict"],
         sources: i.sources ?? [],
-        imageUrl: i.imageUrl,
-        imageCredit: i.imageCredit,
+        imageUrl: trusted ? i.imageUrl : undefined,
+        imageCredit: trusted ? i.imageCredit : undefined,
       };
       facts.push(fact);
       emit({ type: "fact", fact });

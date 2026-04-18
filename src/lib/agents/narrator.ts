@@ -8,6 +8,7 @@ import type {
   StreamEvent,
 } from "@/lib/types";
 import { NARRATOR_SYSTEM, RENDER_LETTER_TOOL } from "@/lib/prompts";
+import { isTrustedImage, pickFallbackImage } from "@/lib/imageValidator";
 import { consumeStream } from "./streamHelper";
 
 export async function runNarrator(
@@ -23,15 +24,18 @@ export async function runNarrator(
   const client = new Anthropic();
   const { transcript, fragments, facts, entities, speaker } = args;
 
-  const user = `Speaker: ${speaker ?? "Unknown"}
+  // Pass the full transcript for voice calibration — Sonnet 4.6 has 1M context
+  // and voice capture is the whole point of the Narrator. Truncating was
+  // producing generic "your great-great-grandfather" signoffs.
+  const user = `Speaker (use this exact name in the signoff): ${speaker ?? "the veteran"}
 
-Transcript excerpt (trimmed for style calibration):
-${transcript.slice(0, 2000)}
+Full transcript (study his cadence, diction, rhythm — mimic it):
+${transcript}
 
 Fragments:
 ${JSON.stringify(fragments, null, 2)}
 
-Verified facts (with images):
+Verified facts (with images — only use imageUrl values that appear verbatim here):
 ${JSON.stringify(facts, null, 2)}
 
 Entities:
@@ -66,9 +70,13 @@ Now write the letter.`;
         speaker?: string;
       };
       if (!i.salutation || !i.sections || !i.signoff) return;
+      const sections = sanitizeAndEnsureImage(
+        i.sections,
+        [transcript, JSON.stringify(fragments)].join(" "),
+      );
       letter = {
         salutation: i.salutation,
-        sections: i.sections,
+        sections,
         signoff: i.signoff,
         speaker: i.speaker ?? speaker ?? "Unknown",
         generatedAt: new Date().toISOString(),
@@ -81,6 +89,30 @@ Now write the letter.`;
     throw new Error("Narrator did not produce a letter");
   }
   return letter;
+}
+
+// Strip hallucinated image URLs (anything not on our trusted host list) and
+// guarantee the letter has at least one visual anchor by injecting a thematic
+// fallback on the first section when nothing survived sanitization.
+function sanitizeAndEnsureImage(
+  sections: LetterSection[],
+  themeContext: string,
+): LetterSection[] {
+  const cleaned = sections.map((s) => {
+    if (s.imageUrl && !isTrustedImage(s.imageUrl)) {
+      return { ...s, imageUrl: undefined, imageCredit: undefined };
+    }
+    return s;
+  });
+  if (!cleaned.some((s) => s.imageUrl) && cleaned.length > 0) {
+    const fb = pickFallbackImage(themeContext);
+    cleaned[0] = {
+      ...cleaned[0],
+      imageUrl: fb.url,
+      imageCredit: fb.credit,
+    };
+  }
+  return cleaned;
 }
 
 async function dripLetter(
