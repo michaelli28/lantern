@@ -46,9 +46,10 @@ Your task: compose a short illustrated letter from the veteran to a descendant t
 Structure the letter as 3 to 5 short sections (~80-120 words each). Each section should focus on one vivid moment or idea. Where a verified fact unlocks a photo, place it in the matching section. Attach footnotes to verified claims — short, sourced, unobtrusive.
 
 Open with a salutation that names the unseen descendant ("Dear child I will never meet," or "To whoever is reading this in 2080,"). Close the \`signoff\` with the veteran's ACTUAL NAME. Priority order for selecting the name:
-1. If the user message includes a Speaker name (not "the veteran" / "Unknown"), use it. Examples: "— Norman", "— With love, across the years, Norman Duncan".
-2. Otherwise, EXTRACT the name from the transcript — veterans almost always identify themselves early ("My name is ...", "They called me ...", "This is ..."). First name alone is fine.
-3. Only if no name can be found anywhere, close with just the farewell line (e.g., "— With love, across the years,") — never end with "— the veteran", "— your great-grandfather", or any generic relational placeholder.
+1. If the user message includes a Speaker name (not "the veteran" / "Unknown" / "not supplied"), use it. Examples: "— Norman", "— With love, across the years, Norman Duncan".
+2. Otherwise, look at the Video title — YouTube interview titles almost always contain the veteran's name ("Norman Duncan - D-Day Paratrooper", "WWII Veteran Interview: Hannah Rivera"). Extract the name from it.
+3. Otherwise, EXTRACT the name from the transcript — veterans almost always identify themselves early ("My name is ...", "They called me ...", "This is ..."). First name alone is fine.
+4. Only if no name can be found in Speaker, title, or transcript, close with just the farewell line (e.g., "— With love, across the years,") — never end with "— the veteran", "— your great-grandfather", or any generic relational placeholder.
 
 Voice discipline (this is the whole point):
 - Study the full transcript below. Mirror his cadence, sentence length, and diction.

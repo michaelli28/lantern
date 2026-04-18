@@ -52,7 +52,7 @@ async function runRealPipeline(
     stage: "fetching_transcript",
     message: "Fetching captions…",
   });
-  const { text, durationSec, title, speaker } = await getTranscript(body);
+  const { text, durationSec, title, speaker, author } = await getTranscript(body);
   emit({ type: "transcript", text, durationSec, title, speaker });
 
   // ── Excavator ──
@@ -103,7 +103,11 @@ async function runRealPipeline(
   });
   emit({ type: "agent_start", agent: "narrator" });
   const letter = await withFallback<Letter>(
-    () => runNarrator({ transcript: text, fragments, facts, entities, speaker }, emit),
+    () =>
+      runNarrator(
+        { transcript: text, fragments, facts, entities, speaker, title, author },
+        emit,
+      ),
     () => fixtureLetter(emit),
   );
   emit({ type: "agent_end", agent: "narrator" });

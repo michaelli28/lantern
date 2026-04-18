@@ -18,16 +18,20 @@ export async function runNarrator(
     facts: Fact[];
     entities: Entity[];
     speaker?: string;
+    title?: string;
+    author?: string;
   },
   emit: (e: StreamEvent) => void,
 ): Promise<Letter> {
   const client = new Anthropic();
-  const { transcript, fragments, facts, entities, speaker } = args;
+  const { transcript, fragments, facts, entities, speaker, title, author } = args;
 
   // Pass the full transcript for voice calibration — Sonnet 4.6 has 1M context
   // and voice capture is the whole point of the Narrator. Truncating was
   // producing generic "your great-great-grandfather" signoffs.
-  const user = `Speaker (use this exact name in the signoff): ${speaker ?? "the veteran"}
+  const user = `Speaker (if supplied, use this exact name in the signoff): ${speaker ?? "(not supplied — extract from video title or transcript)"}
+Video title (often contains the veteran's name): ${title ?? "(none)"}
+Uploader / channel: ${author ?? "(none)"}
 
 Full transcript (study his cadence, diction, rhythm — mimic it):
 ${transcript}
