@@ -1,5 +1,5 @@
 # Lantern
-
+Doc: https://docs.google.com/document/d/1eGMtJliPdv-jnidLdj7FCbWfi9-zogdM00nmMzmgYfc/edit?usp=sharing
 **Turning vanishing voices into letters for the future.**
 
 Hackathon submission — Claude Hackathon 2026, theme _"Creative Flourishing"_ (inspired by Dario Amodei's _Machines of Loving Grace_).
@@ -50,6 +50,7 @@ The 16 million Americans who served in WW2 are down to ~100,000. ~300 die every 
 | 06  | [Demo Clips](./docs/06-DEMO-CLIPS.md)       | you're picking the YouTube URLs       |
 | 07  | [Demo Script](./docs/07-DEMO-SCRIPT.md)     | you're the one presenting             |
 | 08  | [Devpost Template](./docs/08-DEVPOST.md)    | you're submitting                     |
+| 09  | [Future Plans](./docs/09-FUTURE.md)         | you want the post-hackathon roadmap   |
 
 ## Run locally
 
