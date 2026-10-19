@@ -40,7 +40,7 @@
 | Component         | Responsibility                                                         | Props                               |
 | ----------------- | ---------------------------------------------------------------------- | ----------------------------------- |
 | `UrlInput`        | URL text field + Begin button                                          | `onSubmit(url)`                     |
-| `PresetButtons`   | Three hardcoded preset buttons (from `docs/06-DEMO-CLIPS.md`)          | `onPick(fixtureId, title, speaker)` |
+| `PresetButtons`   | Three hardcoded preset buttons                                          | `onPick(fixtureId, title, speaker)` |
 | `AgentTrace`      | Grid container for the 4 agent panels                                  | `state: RunState`                   |
 | `AgentPanel`      | One card per agent, shows stream of items + status dot                 | `agent, items, status`              |
 | `MemoryGraphView` | Simple node/edge list (not a real graph lib — styled list with arrows) | `entities: Entity[]`                |

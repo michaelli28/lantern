@@ -113,5 +113,5 @@ idle → fetching_transcript → excavating → { fact_checking ∥ graphing } �
 | YouTube transcript fetch fails live | Medium          | Pre-cache 3 transcripts as JSON fixtures; presets bypass fetch                  |
 | Web search rate-limited or slow     | Low             | Cap at 3 searches; have Fact-Weaver time-bound                                  |
 | Narrator output too long / slow     | Medium          | Explicit token cap in prompt; render chunks as they stream                      |
-| Next.js 16 breaking changes on SSE  | Medium          | Read `node_modules/next/dist/docs/` before wiring route handler (per AGENTS.md) |
+| Next.js 16 breaking changes on SSE  | Medium          | Read `node_modules/next/dist/docs/` before wiring route handler |
 | API key missing at demo             | High if ignored | Hardcode a fallback message; test the deploy end-to-end _before_ minute 85      |

@@ -10,7 +10,7 @@
 
 - [`docs/02-API-CONTRACT.md`](./02-API-CONTRACT.md) — types and event shapes (don't deviate)
 - [`docs/05-AGENT-PROMPTS.md`](./05-AGENT-PROMPTS.md) — the 4 system prompts, ready to paste
-- **Before writing the route handler**, read Next.js 16's App Router route-handler docs in `node_modules/next/dist/docs/` — APIs have changed (per `AGENTS.md`).
+- **Before writing the route handler**, read Next.js 16's App Router route-handler docs in `node_modules/next/dist/docs/` — APIs have changed.
 
 ## Files you own
 
