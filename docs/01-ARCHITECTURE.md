@@ -88,7 +88,7 @@ lantern/
 - Stage 2 (Excavator) must complete before 3 (Weaver/Graph) because they need fragments as input.
 - Stages 3a and 3b are independent — fire them with `Promise.all`.
 - Stage 4 (Narrator) depends on all three prior outputs.
-- Net wall-clock: ~3 Claude turns instead of 4. Perceptibly snappier, and the parallel fire is a talking point in the demo.
+- Net wall-clock: ~3 Claude turns instead of 4. Perceptibly snappier.
 
 ## State machine (stage enum)
 

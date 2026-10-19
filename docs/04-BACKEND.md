@@ -165,7 +165,7 @@ for await (const event of stream) {
 
 For tool use: loop over `content_block_start` with `input_json_delta` to stream tool args, and when a `tool_use` block completes, emit the corresponding domain event (`fragment`, `fact`, `entity`).
 
-For **extended thinking** on Narrator: pass `thinking: { type: "enabled", budget_tokens: 5000 }`. Forward thinking deltas as `{ type: "thinking", agent: "narrator", text: ... }` — the judges love seeing this.
+For **extended thinking** on Narrator: pass `thinking: { type: "enabled", budget_tokens: 5000 }`. Forward thinking deltas as `{ type: "thinking", agent: "narrator", text: ... }`.
 
 For **web search**: use Anthropic's hosted tool `{ type: "web_search_20250305", name: "web_search", max_uses: 3 }` on the Fact-Weaver. Each tool_result comes back as a web search results block — extract URLs + titles into `Fact.sources`.
 
