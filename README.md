@@ -2,7 +2,7 @@
 
 Lantern takes a YouTube video of a World War II veteran telling their story and turns it into an illustrated letter written in the veteran's voice, addressed to a future descendant. A chain of Claude agents reads the transcript, pulls out the story, checks the history, and writes the letter, while the browser shows each agent working in real time.
 
-Built at the Claude Hackathon 2026 (April 2026) as a two-person team project.
+Built at the Claude Hackathon 2026 (April 2026) by George Zhou and Michael Li.
 
 ## How it works
 
